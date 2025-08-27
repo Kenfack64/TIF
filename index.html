@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Gestion des Frais</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/2048px-Orange_logo.svg.png" alt="Logo Orange">
+                <h1>Tableau de Bord des Frais de Déplacement</h1>
+            </div>
+        </header>
+
+        <main>
+            <div class="form-container card">
+                <h3>Ajouter un déplacement</h3>
+                <form id="expense-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="employee-name">Nom et Prénom de l'employé</label>
+                            <input type="text" id="employee-name" list="employee-list" required>
+                            <datalist id="employee-list"></datalist>
+                        </div>
+                        <div class="form-group">
+                            <label for="work-date">Date de la mission</label>
+                            <input type="date" id="work-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input type="text" id="destination" required>
+                        </div>
+                         <div class="form-group">
+                            <label for="category">Catégorie de dépense</label>
+                            <select id="category" required>
+                                <option value="Transport (Taxi/Moto)">Transport (Taxi/Moto)</option>
+                                <option value="Restauration">Restauration</option>
+                                <option value="Hébergement">Hébergement</option>
+                                <option value="Carburant">Carburant</option>
+                                <option value="Autres">Autres</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount-withdrawn">Montant retiré (FCFA)</label>
+                            <input type="number" id="amount-withdrawn" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="justification">Montant justifié (FCFA)</label>
+                            <input type="number" id="justification" value="0" min="0" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-add">Ajouter l'enregistrement</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Analyse Visuelle</h3>
+                <div class="chart-controls">
+                    <label for="chart-employee-select">Choisir un employé pour afficher son diagramme :</label>
+                    <select id="chart-employee-select">
+                        <option value="all">Tous les employés</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="expense-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="table-container card">
+                <div class="table-header">
+                    <h3>Tableau de Suivi Détaillé</h3>
+                    <div class="export-buttons">
+                        <button onclick="exportTableTo('pdf', 'detail')" class="btn-export">Exporter PDF</button>
+                        <button onclick="exportTableTo('word', 'detail')" class="btn-export">Exporter Word</button>
+                    </div>
+                </div>
+                <input type="text" id="search-detail" class="search-bar" placeholder="Rechercher dans le tableau détaillé...">
+                <table id="detail-table">
+                    <thead>
+                        <tr>
+                            <th>Employé</th>
+                            <th>Date</th>
+                            <th>Destination</th>
+                            <th>Catégorie</th>
+                            <th>Montant Retiré</th>
+                            <th>Montant Justifié</th>
+                            <th>Solde</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detail-table-body"></tbody>
+                </table>
+            </div>
+
+            <div class="table-container card">
+                 <div class="table-header">
+                    <h3>Fiche de Synthèse Globale</h3>
+                    <div class="export-buttons">
+                         <button onclick="exportTableTo('pdf', 'summary')" class="btn-export">Exporter PDF</button>
+                         <button onclick="exportTableTo('word', 'summary')" class="btn-export">Exporter Word</button>
+                    </div>
+                </div>
+                <input type="text" id="search-summary" class="search-bar" placeholder="Rechercher un employé...">
+                <table id="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Nom de l'Employé</th>
+                            <th>Total Retiré</th>
+                            <th>Total Justifié</th>
+                            <th>Solde Global Non Justifié</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summary-table-body"></tbody>
+                </table>
+            </div>
+        </main>
+        <footer><p>Développé sur mesure pour les besoins de l'entreprise - &copy; 2025</p></footer>
+    </div>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>Modifier l'enregistrement</h3>
+            <form id="edit-form">
+                <input type="hidden" id="edit-id">
+                 <div class="form-group">
+                    <label for="edit-employee-name">Nom et Prénom</label>
+                    <input type="text" id="edit-employee-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-work-date">Date</label>
+                    <input type="date" id="edit-work-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-destination">Destination</label>
+                    <input type="text" id="edit-destination" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-category">Catégorie</label>
+                    <select id="edit-category" required>
+                         <option value="Transport (Taxi/Moto)">Transport (Taxi/Moto)</option>
+                         <option value="Restauration">Restauration</option>
+                         <option value="Hébergement">Hébergement</option>
+                         <option value="Carburant">Carburant</option>
+                         <option value="Autres">Autres</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-amount-withdrawn">Montant retiré</label>
+                    <input type="number" id="edit-amount-withdrawn" min="0" required>
+                </div>
+                 <div class="form-group">
+                    <label for="edit-justification">Montant justifié</label>
+                    <input type="number" id="edit-justification" min="0" required>
+                </div>
+                <button type="submit" class="btn-add">Mettre à jour</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
