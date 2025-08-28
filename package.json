@@ -1,0 +1,32 @@
+{
+  "name": "job",
+  "version": "1.0.0",
+  "description": "Application de gestion des frais avec notifications",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kenfack64/TIF.git"
+  },
+  "keywords": [],
+  "author": "Kenfack64",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kenfack64/TIF/issues"
+  },
+  "homepage": "https://github.com/Kenfack64/TIF#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.9.13",
+    "twilio": "^4.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

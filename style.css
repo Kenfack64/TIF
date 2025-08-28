@@ -39,25 +39,31 @@ h3 { margin-bottom: 20px; color: var(--secondary-color); font-weight: 600; borde
 .form-group input, .form-group select { padding: 12px; border: 1px solid var(--border-color); border-radius: 5px; font-family: 'Poppins', sans-serif; font-size: 1em; transition: border-color 0.3s; }
 .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); }
 
-.btn-add { background-color: var(--primary-color); color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; font-weight: 500; transition: background-color 0.3s; width: 100%; margin-top: 10px; }
+.btn-add { background-color: var(--primary-color); color: white; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; font-weight: 500; transition: background-color 0.3s, transform 0.1s; width: 100%; margin-top: 10px; }
 .btn-add:hover { background-color: #e66a00; }
+.btn-add:active { transform: scale(0.97); }
 
 .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
 .search-bar { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid var(--border-color); border-radius: 5px; }
+
+.table-container { overflow-x: auto; }
 
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
 thead { background-color: #f9f9f9; }
 th { font-weight: 600; color: var(--secondary-color); }
+tbody tr { transition: background-color 0.3s ease; }
 tbody tr:hover { background-color: #fff8f2; }
 
-.actions-cell button { padding: 5px 10px; border: none; border-radius: 5px; color: white; cursor: pointer; margin-right: 5px; transition: opacity 0.3s; }
+.actions-cell button { padding: 5px 10px; border: none; border-radius: 5px; color: white; cursor: pointer; margin-right: 5px; transition: opacity 0.3s, transform 0.1s; }
 .actions-cell .btn-edit { background-color: var(--edit-color); }
 .actions-cell .btn-delete { background-color: var(--error-color); }
 .actions-cell button:hover { opacity: 0.8; }
+.actions-cell button:active { transform: scale(0.95); }
 
-.export-buttons .btn-export { background-color: var(--secondary-color); color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px; font-size: 0.9em; transition: background-color 0.3s; }
+.export-buttons .btn-export { background-color: var(--secondary-color); color: white; padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px; font-size: 0.9em; transition: background-color 0.3s, transform 0.1s; }
 .export-buttons .btn-export:hover { background-color: #333; }
+.export-buttons .btn-export:active { transform: scale(0.97); }
 
 /* Styles pour les diagrammes */
 .chart-controls { margin-bottom: 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
@@ -67,9 +73,33 @@ tbody tr:hover { background-color: #fff8f2; }
 
 /* Styles pour la fenêtre modale */
 .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
-.modal-content { background-color: #fefefe; margin: 10% auto; padding: 30px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 80%; max-width: 600px; }
+.modal-content { background-color: #fefefe; margin: 10% auto; padding: 30px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 80%; max-width: 600px; animation: fadeIn 0.3s ease-out; }
 .close-button { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
 .close-button:hover, .close-button:focus { color: black; text-decoration: none; }
 #edit-form .form-group { margin-bottom: 15px; }
 
+@keyframes fadeIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
 footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color); color: #888; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-grid { grid-template-columns: 1fr; }
+
+    .table-header { flex-direction: column; align-items: flex-start; }
+
+    .export-buttons { margin-top: 10px; }
+
+    .chart-container { height: 300px; }
+}
+
+@media (max-width: 480px) {
+    header h1 { font-size: 1.5em; }
+
+    .btn-add { font-size: 0.9em; padding: 10px 20px; }
+
+    table th, table td { font-size: 0.8em; }
+}
